@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K5MarauderBTC Control Interface</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #252525;
+            border-bottom: 1px solid #333;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #f7931a;
+            border-color: #f7931a;
+        }
+        .btn-primary:hover {
+            background-color: #e68a19;
+            border-color: #e68a19;
+        }
+        .btn-secondary {
+            background-color: #444;
+            border-color: #444;
+        }
+        .btn-secondary:hover {
+            background-color: #555;
+            border-color: #555;
+        }
+        .price-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .price-up {
+            color: #00ca72;
+        }
+        .price-down {
+            color: #ff5252;
+        }
+        .mode-indicator {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .mode-btc {
+            background-color: #f7931a;
+            color: #fff;
+        }
+        .mode-marauder {
+            background-color: #ff5252;
+            color: #fff;
+        }
+        .last-update {
+            font-size: 0.8rem;
+            color: #aaa;
+            text-align: center;
+        }
+        .logo {
+            max-width: 100px;
+            margin: 20px auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="text-center mb-4">
+                    <h1>K5MarauderBTC</h1>
+                    <p class="text-muted">Control Interface</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Bitcoin Price</span>
+                        <span class="mode-indicator" id="mode-indicator">Loading...</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="price-display" id="btc-price">
+                            $0.00
+                        </div>
+                        <div class="text-center mb-3" id="btc-change">
+                            0.00%
+                        </div>
+                        <div class="last-update" id="last-update">
+                            Last updated: Never
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        Mode Control
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary" id="btn-btc-mode">
+                                BTC Clock Mode
+                            </button>
+                            <button class="btn btn-danger" id="btn-marauder-mode">
+                                Marauder Mode
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        Settings
+                    </div>
+                    <div class="card-body">
+                        <form id="settings-form">
+                            <div class="mb-3">
+                                <label for="update-interval" class="form-label">Update Interval (seconds)</label>
+                                <input type="number" class="form-control" id="update-interval" min="30" max="3600" value="60">
+                            </div>
+                            <div class="mb-3">
+                                <label for="currency" class="form-label">Currency</label>
+                                <select class="form-select" id="currency">
+                                    <option value="usd" selected>USD</option>
+                                    <option value="eur">EUR</option>
+                                    <option value="gbp">GBP</option>
+                                    <option value="jpy">JPY</option>
+                                </select>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Save Settings</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        Device Control
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="d-grid">
+                                    <button class="btn btn-secondary" id="btn-restart">
+                                        Restart Device
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-grid">
+                                    <button class="btn btn-secondary" id="btn-refresh">
+                                        Refresh Data
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header">
+                        Console
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <textarea class="form-control bg-dark text-light" id="console-output" rows="5" readonly></textarea>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="command-input" placeholder="Enter command...">
+                            <button class="btn btn-primary" id="btn-send-command">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // DOM elements
+        const btcPrice = document.getElementById('btc-price');
+        const btcChange = document.getElementById('btc-change');
+        const lastUpdate = document.getElementById('last-update');
+        const modeIndicator = document.getElementById('mode-indicator');
+        const btnBtcMode = document.getElementById('btn-btc-mode');
+        const btnMarauderMode = document.getElementById('btn-marauder-mode');
+        const btnRestart = document.getElementById('btn-restart');
+        const btnRefresh = document.getElementById('btn-refresh');
+        const consoleOutput = document.getElementById('console-output');
+        const commandInput = document.getElementById('command-input');
+        const btnSendCommand = document.getElementById('btn-send-command');
+        const settingsForm = document.getElementById('settings-form');
+        
+        // Update status
+        function updateStatus() {
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(data => {
+                    // Update price display
+                    btcPrice.textContent = `$${data.btc_price.toFixed(2)}`;
+                    btcPrice.className = data.btc_change >= 0 ? 'price-display price-up' : 'price-display price-down';
+                    
+                    // Update price change
+                    const changePrefix = data.btc_change >= 0 ? '+' : '';
+                    btcChange.textContent = `${changePrefix}${data.btc_change.toFixed(2)}%`;
+                    btcChange.className = data.btc_change >= 0 ? 'text-success' : 'text-danger';
+                    
+                    // Update last update time
+                    const updateTime = new Date(data.last_update * 1000).toLocaleTimeString();
+                    lastUpdate.textContent = `Last updated: ${updateTime}`;
+                    
+                    // Update mode indicator
+                    modeIndicator.textContent = data.mode;
+                    modeIndicator.className = `mode-indicator mode-${data.mode.toLowerCase()}`;
+                    
+                    // Update console if there's new output
+                    if (data.console_output && data.console_output !== consoleOutput.value) {
+                        consoleOutput.value = data.console_output;
+                        consoleOutput.scrollTop = consoleOutput.scrollHeight;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching status:', error);
+                });
+        }
+        
+        // Send command
+        function sendCommand(command) {
+            fetch('/api/command', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ command })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    consoleOutput.value += `> ${command}\n${data.response}\n`;
+                    consoleOutput.scrollTop = consoleOutput.scrollHeight;
+                } else {
+                    consoleOutput.value += `> ${command}\nError: ${data.error}\n`;
+                    consoleOutput.scrollTop = consoleOutput.scrollHeight;
+                }
+            })
+            .catch(error => {
+                console.error('Error sending command:', error);
+                consoleOutput.value += `> ${command}\nError: ${error}\n`;
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            });
+        }
+        
+        // Set mode
+        function setMode(mode) {
+            fetch('/api/mode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ mode })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    consoleOutput.value += `> Setting mode to ${mode}\n${data.response}\n`;
+                    consoleOutput.scrollTop = consoleOutput.scrollHeight;
+                    updateStatus();
+                } else {
+                    consoleOutput.value += `> Setting mode to ${mode}\nError: ${data.error}\n`;
+                    consoleOutput.scrollTop = consoleOutput.scrollHeight;
+                }
+            })
+            .catch(error => {
+                console.error('Error setting mode:', error);
+                consoleOutput.value += `> Setting mode to ${mode}\nError: ${error}\n`;
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            });
+        }
+        
+        // Event listeners
+        btnBtcMode.addEventListener('click', () => setMode('btc'));
+        btnMarauderMode.addEventListener('click', () => setMode('marauder'));
+        btnRestart.addEventListener('click', () => sendCommand('restart'));
+        btnRefresh.addEventListener('click', () => sendCommand('refresh'));
+        btnSendCommand.addEventListener('click', () => {
+            const command = commandInput.value.trim();
+            if (command) {
+                sendCommand(command);
+                commandInput.value = '';
+            }
+        });
+        commandInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                const command = commandInput.value.trim();
+                if (command) {
+                    sendCommand(command);
+                    commandInput.value = '';
+                }
+            }
+        });
+        settingsForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const updateInterval = document.getElementById('update-interval').value;
+            const currency = document.getElementById('currency').value;
+            sendCommand(`set_interval ${updateInterval}`);
+            sendCommand(`set_currency ${currency}`);
+        });
+        
+        // Update status every 5 seconds
+        updateStatus();
+        setInterval(updateStatus, 5000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+idf_component_register(
+    SRCS 
+        "main.cpp"
+        "../src/BTC_Clock/BTC_Clock.cpp"
+    INCLUDE_DIRS 
+        "."
+        "../include"
+    REQUIRES 
+        esp_http_client
+        nvs_flash
+        json
+)

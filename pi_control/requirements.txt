@@ -1,0 +1,5 @@
+flask==2.3.3
+pyserial==3.5
+requests==2.31.0
+python-dotenv==1.0.0
+waitress==2.1.2
