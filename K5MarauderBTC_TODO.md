@@ -10,11 +10,11 @@ Enable control via Raspberry Pi 5 through USB or web interface
 Implement auto-start BTC clock functionality on power-up
 Develop easy WiFi configuration for potential commercial use
 1. Repository Setup
-[ ] Fork ESP32 Marauder repository to GitHub
-[ ] Create new branch for BTC clock integration
+[x] Fork ESP32 Marauder repository to GitHub
+[x] Create new branch for BTC clock integration
 [x] Set up proper .gitignore file
 [x] Create comprehensive README.md
-[ ] Add appropriate license information
+[x] Add appropriate license information
 2. Development Environment
 [x] Install ESP-IDF in Windsurf
 [x] Install ESP-IDF plugin
@@ -42,7 +42,7 @@ Develop easy WiFi configuration for potential commercial use
 [ ] Ensure compatibility with existing Marauder features
 [ ] Add BTC-themed icons and graphics
 6. Control Interfaces
-[x] Implement serial communication protocol for Pi control
+[ ] Implement serial communication protocol for Pi control
 [x] Create command-line interface for basic functions
 [x] Develop web server for remote control
 [x] Implement REST API endpoints
@@ -82,11 +82,11 @@ Develop easy WiFi configuration for potential commercial use
 [ ] Document known issues and limitations
 [ ] Create release tags on GitHub
 Next Steps
-1. Fork ESP32 Marauder repository to GitHub
-2. Implement captive portal for initial WiFi setup
-3. Add BTC Clock to Marauder menu system
-4. Set up automatic connection on Pi boot
-5. Implement secure OTA update mechanism
+1. Implement captive portal for initial WiFi setup
+2. Add BTC Clock to Marauder menu system
+3. Set up automatic connection on Pi boot
+4. Implement secure OTA update mechanism
+5. Test WiFi connectivity and reliability
 
 Resources
 ESP32 Marauder GitHub
